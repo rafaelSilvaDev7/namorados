@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nossa História ❤️</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#0f0f12;
+    color:#fff;
+    overflow-x:hidden;
+}
+#lockScreen{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+.card{
+    background:#1b1b22;
+    padding:30px;
+    border-radius:20px;
+    width:100%;
+    max-width:450px;
+    text-align:center;
+    box-shadow:0 0 30px rgba(255,92,141,.2);
+}
+.card h1{color:#ff5c8d;margin-bottom:15px}
+.card input{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:10px;
+    margin-top:15px;
+}
+.card button{
+    width:100%;
+    padding:15px;
+    margin-top:15px;
+    border:none;
+    border-radius:10px;
+    background:#ff5c8d;
+    color:white;
+    cursor:pointer;
+}
+#site{display:none}
+.hero{
+    text-align:center;
+    padding:70px 20px;
+}
+.hero h1{
+    font-size:3rem;
+    color:#ff5c8d;
+}
+#contador{
+    margin-top:20px;
+    font-size:1.5rem;
+}
+.timeline{
+    max-width:1200px;
+    margin:auto;
+}
+.momento{
+    display:flex;
+    align-items:center;
+    gap:40px;
+    margin:70px 20px;
+}
+.momento:nth-child(even){
+    flex-direction:row-reverse;
+}
+.polaroid{
+    background:white;
+    padding:10px;
+    width:300px;
+    box-shadow:0 10px 30px rgba(0,0,0,.5);
+    transform:rotate(-3deg);
+}
+.polaroid img{
+    width:100%;
+    display:block;
+}
+.legenda{
+    color:black;
+    text-align:center;
+    padding:10px;
+    font-style:italic;
+}
+.info{flex:1}
+.data{
+    color:#ff5c8d;
+    font-size:2rem;
+    font-weight:bold;
+}
+.titulo{
+    font-size:2.5rem;
+    margin:10px 0;
+}
+.descricao{
+    color:#ccc;
+    line-height:1.6;
+}
+.final{
+    text-align:center;
+    padding:100px 20px;
+}
+canvas{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+}
+@media(max-width:768px){
+.momento,.momento:nth-child(even){
+flex-direction:column;
+text-align:center;
+}
+.polaroid{width:90%}
+.titulo{font-size:2rem}
+}
+</style>
+</head>
+<body>
+
+<div id="lockScreen">
+<div class="card">
+<h1>❤️ Uma Surpresa ❤️</h1>
+<p>Digite nossa data especial</p>
+<input id="senha" placeholder="05/08/2022">
+<button onclick="validarSenha()">Entrar</button>
+<p id="erro"></p>
+</div>
+</div>
+
+<div id="site">
+<canvas id="hearts"></canvas>
+
+<audio id="musica" loop>
+<source src="musica/nossa-musica.mp3" type="audio/mpeg">
+</audio>
+
+<section class="hero">
+<h1>Nossa História ❤️</h1>
+<div id="contador"></div>
+</section>
+
+<section id="timeline" class="timeline"></section>
+
+<section class="final">
+<h2>E essa história ainda está sendo escrita...</h2>
+<br>
+<p>Te amo muito ❤️</p>
+</section>
+</div>
+
+<script>
+const DATA_NAMORO="2022-08-05";
+
+const MOMENTOS=[
+{
+data:"2022-08-05",
+titulo:"O Começo de Tudo",
+descricao:"Nosso primeiro dia juntos ❤️",
+foto:"fotos/01.jpg"
+},
+{
+data:"2023-01-10",
+titulo:"Primeira Viagem",
+descricao:"Um momento inesquecível.",
+foto:"fotos/02.jpg"
+},
+{
+data:"2024-06-12",
+titulo:"Dia dos Namorados",
+descricao:"Mais um capítulo da nossa história.",
+foto:"fotos/03.jpg"
+}
+];
+
+function validarSenha(){
+const v=document.getElementById("senha").value.replaceAll("/","");
+if(v!=="05082022"){
+document.getElementById("erro").innerText="Data incorreta ❤️";
+return;
+}
+document.getElementById("lockScreen").style.display="none";
+document.getElementById("site").style.display="block";
+document.getElementById("musica").play().catch(()=>{});
+gerarTimeline();
+iniciarContador();
+iniciarCoracoes();
+}
+
+function iniciarContador(){
+const inicio=new Date(DATA_NAMORO);
+function atualizar(){
+const agora=new Date();
+const dias=Math.floor((agora-inicio)/86400000);
+document.getElementById("contador").innerHTML=
+`❤️ Estamos juntos há <b>${dias}</b> dias ❤️`;
+}
+atualizar();
+setInterval(atualizar,1000);
+}
+
+function formatar(data){
+const meses=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+const d=new Date(data);
+return meses[d.getMonth()]+" "+d.getFullYear();
+}
+
+function gerarTimeline(){
+const tl=document.getElementById("timeline");
+tl.innerHTML="";
+MOMENTOS.sort((a,b)=>new Date(a.data)-new Date(b.data));
+MOMENTOS.forEach(m=>{
+tl.innerHTML+=`
+<div class="momento">
+<div class="polaroid">
+<img src="${m.foto}">
+<div class="legenda">${m.titulo}</div>
+</div>
+<div class="info">
+<div class="data">${formatar(m.data)}</div>
+<div class="titulo">${m.titulo}</div>
+<div class="descricao">${m.descricao}</div>
+</div>
+</div>`;
+});
+}
+
+function iniciarCoracoes(){
+const c=document.getElementById("hearts");
+const ctx=c.getContext("2d");
+function resize(){
+c.width=window.innerWidth;
+c.height=window.innerHeight;
+}
+resize();
+window.addEventListener("resize",resize);
+
+const hearts=[];
+
+for(let i=0;i<40;i++){
+hearts.push({
+x:Math.random()*c.width,
+y:Math.random()*c.height,
+s:Math.random()*15+8,
+v:Math.random()*1+0.5
+});
+}
+
+function drawHeart(x,y,size){
+ctx.fillStyle="rgba(255,92,141,.7)";
+ctx.beginPath();
+ctx.moveTo(x,y);
+ctx.bezierCurveTo(x-size/2,y-size/2,x-size,y+size/3,x,y+size);
+ctx.bezierCurveTo(x+size,y+size/3,x+size/2,y-size/2,x,y);
+ctx.fill();
+}
+
+function animate(){
+ctx.clearRect(0,0,c.width,c.height);
+hearts.forEach(h=>{
+h.y-=h.v;
+if(h.y<-20){
+h.y=c.height+20;
+h.x=Math.random()*c.width;
+}
+drawHeart(h.x,h.y,h.s);
+});
+requestAnimationFrame(animate);
+}
+animate();
+}
+</script>
+
+</body>
+</html>
